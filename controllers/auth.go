@@ -8,7 +8,10 @@ import (
 	"auth.jwt.api/util"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/oauth2"
 )
+
+var googleConf *oauth2.Config
 
 type registerRequest struct {
 	Username string `json:"username" binding:"required"`
@@ -39,7 +42,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	user := models.User{Username: payload.Username, Password: string(passwordEncrypt), Fullname: payload.Fullname}
+	user := models.User{Username: payload.Username, Password: string(passwordEncrypt), Fullname: payload.Fullname, Provider: "local"}
 
 	database.DB.Create(&user)
 
@@ -91,3 +94,8 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": SUCCESS, "accessToken": token})
 }
+
+func GoogleAuth(c *gin.Context) {
+}
+
+func GoogleAuthCallback(c *gin.Context) {}
